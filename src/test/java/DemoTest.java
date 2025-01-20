@@ -13,6 +13,6 @@ public class DemoTest {
         WebDriver driver = manager.getDriver();
         driver.get("https://www.youtube.com/");
         String url = driver.getCurrentUrl();
-        assertTrue(url.contains("youtube"));
+                assertTrue(url.contains("youtube"));
     }
 }
