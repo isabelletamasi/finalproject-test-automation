@@ -24,6 +24,8 @@ public class SignInPopUp {
     private final static By OVERVIEW_NAVIGATION_LIST = By.xpath("//*[@id=\"lt_mainsidebar\"]/div[2]/div");
     private final static By YOUR_WORLD_NAVIGATION_LIST = By.xpath("//*[@class=\"sidebar_group yourworld\"]/div/a");
     private final static By DISCOVER_NAVIGATION_LIST = By.xpath("//*[@class=\"sidebar_group discover\"]/div/a");
+    private final static By SIGN_OUT_BUTTON = By.xpath("(//*[@id=\"mastheadSigninLink\"])[2]");
+    private final static By WRONG_CREDENTIALS_MESSAGE = By.xpath("(//*[@class=\"problem alert alert-danger\"])[1]");
 
     public void signInLibrary() {
         log.info("Sign in to LibraryThing with existent account details");
@@ -49,6 +51,18 @@ public class SignInPopUp {
         actions.waitElementToBeClickable(PASSWORD_FIELD, 10);
         actions.sendKeys(PASSWORD_FIELD, passw2);
         actions.clickElement(SIGN_IN_BUTTON);
+    }
+
+    public boolean isSignInFailing() {
+        log.info("Checking if Sign In failed with wrong password");
+        actions.waitElementToBeClickable(WRONG_CREDENTIALS_MESSAGE, 12);
+        String wrongCredentialsMessage = actions.getElementText(WRONG_CREDENTIALS_MESSAGE);
+        return wrongCredentialsMessage.equals("Name or password is wrong.");
+    }
+
+    public void signOutLibrary() {
+        log.info("Sign out of LibraryThing account");
+        actions.clickElement(SIGN_OUT_BUTTON);
     }
 
     public List<WebElement> browseOverviewHeadersList() {

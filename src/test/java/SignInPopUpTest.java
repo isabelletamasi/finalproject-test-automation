@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class SignInPopUpTest {
 
@@ -27,7 +28,7 @@ public class SignInPopUpTest {
     }
 
     @Test
-    @DisplayName("Sign in & Check existence of left navigation web elements test")
+    @DisplayName("Sign in & Check existence of left navigation web elements test & Sign Out")
     public void signInTest() {
         signIn.signInLibrary();
         List<WebElement> browseOverviewHeadersList = signIn.browseOverviewHeadersList();
@@ -50,12 +51,17 @@ public class SignInPopUpTest {
         }
         log.info(actualHeaders);
         assertEquals(expectedHeaders.size(), actualHeaders.size());
+
+        signIn.signOutLibrary();
+        assertEquals(BrowserManager.currentUrl(), "https://www.librarything.com/");
     }
 
     @Test
     @DisplayName("Verify sign in failure when adding a valid username but an invalid password")
     public void invalidSignInTest() {
         signIn.invalidSignInLibrary();
+        assertTrue(signIn.isSignInFailing(), "Sign In should fail with invalid credentials");
+        System.out.println("Sign In failed");
     }
 
     @AfterEach
