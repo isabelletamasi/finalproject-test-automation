@@ -20,4 +20,8 @@ public class BrowserManager {
     public static void closeDriver() {
         driver.close();
     }
+
+    public static String currentUrl() {
+        return driver.getCurrentUrl();
+    }
 }
