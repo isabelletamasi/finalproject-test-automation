@@ -64,8 +64,8 @@ public class SignInPopUpTest {
         System.out.println("Sign In failed");
     }
 
-    @AfterEach
+  /*  @AfterEach
     public void tearDown() throws InterruptedException {
         BrowserManager.closeDriver();
-    }
+    }*/
 }

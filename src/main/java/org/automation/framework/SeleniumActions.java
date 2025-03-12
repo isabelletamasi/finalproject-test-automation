@@ -50,11 +50,16 @@ public class SeleniumActions {
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
-    public void waitFluentElementVisible(By locator, int timeOut) {
+    public void waitFluentElementClickable(By locator, int timeOut) {
         Wait<WebDriver> wait = new FluentWait<>(browserManager.getDriver())
                 .withTimeout(Duration.ofSeconds(timeOut))
                 .pollingEvery(Duration.ofMillis(300))
                 .ignoring(ElementNotInteractableException.class);
-        wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+        wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
+    public void waitForSpinnerToHide(By locator, int timeToWait) {
+        Wait<WebDriver> wait = new WebDriverWait(browserManager.getDriver(), Duration.ofSeconds(timeToWait));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 }

@@ -18,6 +18,10 @@ public class HomePage {
 
     private final static By HOME_PAGE_BANNER = By .xpath("/html/body/div[2]/main/div[2]/section[1]/div[1]/div[1]/img");
     private final static By HOME_PAGE_BOOKS_ACTIVITY = By .xpath("(//div[@class='ffarea fgap'])");
+    private final static By SEARCH_FIELD = By .xpath("//*[@id=\"mastsearch_query\"]");
+    private final static By SEARCH_MAGNIFIER_BUTTON = By .xpath("//*[@id=\"mastsearch_glass\"]");
+    private final static By SPINNER = By .xpath("//*[@id=\"auf_uUGbA\"]");
+    private final static By SEARCH_BOOK_ENTRIES_FROM_AUTHOR = By.xpath("//table//tr");
 
     public void openHomePage() {
         log.info("Open home page");
@@ -45,5 +49,13 @@ public class HomePage {
         log.info("Check if books in Recent Activity are displayed");
         manager.getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
         return actions.getElements(HOME_PAGE_BOOKS_ACTIVITY);
+    }
+
+    public String searchAuthorFromHomePage(String authorForSearch, int timeToWait) {
+        actions.waitFluentElementClickable(SEARCH_FIELD, timeToWait);
+        actions.sendKeys(SEARCH_FIELD, authorForSearch);
+        actions.clickElement(SEARCH_MAGNIFIER_BUTTON);
+        actions.waitForSpinnerToHide(SPINNER, 10);
+        return actions.getElementText(SEARCH_BOOK_ENTRIES_FROM_AUTHOR);
     }
 }

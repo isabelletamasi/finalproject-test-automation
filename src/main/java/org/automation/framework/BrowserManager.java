@@ -13,7 +13,6 @@ public class BrowserManager {
     }
 
     public WebDriver getDriver() {
-
         return driver;
     }
 
