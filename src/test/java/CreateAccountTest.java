@@ -18,10 +18,11 @@ public class CreateAccountTest {
     }
 
     @Test
-    @DisplayName("Validate Join Now-window's fields test")
-    public void validateJoinNowFields() {
-        createAccountPage.clickJoinNowButton();
+    @DisplayName("Validate Create Account input fields accessibility")
+    public void validateCreateAccountFields() {
+        createAccountPage.clickSignUpWithEmailButton();
         List<String> labelsText = createAccountPage.getAccountLabels();
+        createAccountPage.clickCreateAccountButton();
     }
 
     @AfterEach

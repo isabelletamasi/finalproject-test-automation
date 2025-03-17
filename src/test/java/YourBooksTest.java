@@ -1,3 +1,5 @@
+import io.qameta.allure.Severity;
+import io.qameta.allure.SeverityLevel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.automation.framework.BrowserManager;
@@ -10,44 +12,54 @@ import org.openqa.selenium.WebElement;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class YourBooksTest {
-    HomePage homePage = new HomePage();
-    SignInPopUp signIn = new SignInPopUp();
+
     YourBooksPage yourBooksPage = new YourBooksPage();
     Logger log = LogManager.getRootLogger();
 
-    @BeforeEach
-    public void setUp() {
+
+    @BeforeAll
+    public static void setUp() {
+        HomePage homePage = new HomePage();
+        SignInPopUp signIn = new SignInPopUp();
         homePage.openHomePage();
-        signIn.signInLibrary();
+        signIn.signInAccount();
     }
 
     @Test
-    @DisplayName("Validate book counts in Favorites and All collections dropdown")
-    public void validateBookCounts() {
-        log.info("Navigate to 'Your Books' page and validate book counts in dropdown collections");
-
-        // Navigate to Your Books page
-        yourBooksPage.openYourBooksPage();
-
-        // Validate Favorites category
-        log.info("Validating 'Favorites' category");
-        List<WebElement> favoriteBooks = yourBooksPage.selectCategory("Favorites");
-        assertNotNull(favoriteBooks, "Favorites book list is null");
-        assertEquals(3, favoriteBooks.size(),
-                "Favorites book count mismatch: " + favoriteBooks.size());
-
-        // Validate All collections
-        log.info("Validating 'All collections' category");
-        List<WebElement> allBooks = yourBooksPage.selectCategory("All collections");
-        assertNotNull(allBooks, "All collections book list is null");
-        assertEquals(6, allBooks.size(),
-                "Total book count mismatch: " + allBooks.size());
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("functional")
+    @Tag("ui")
+    @Tag("regression")
+    @DisplayName("Add new book to Currently Reading collection and validate updated book count")
+    public void validateAddingBookToCurrentlyRead() {
+        log.info("Click on 'Want to Read' dropdown to add book");
+        yourBooksPage.clickOnBookDropdown();
+        yourBooksPage.addToCollection();
+        yourBooksPage.openMyBooksPage();
+        String isBookInCollectionText = yourBooksPage.isBookInCollection();
+        assertEquals("Currently Reading (1)", isBookInCollectionText, "This collection is empty");
     }
 
-    @AfterEach
+    @Test
+    @Severity(SeverityLevel.NORMAL)
+    @Tag("regression")
+    @Tag("functional")
+    @DisplayName("Validate total book count in My Books")
+    public void validateTotalBookCount() {
+        log.info("Navigate to 'Your Books' page and validate book counts in dropdown collections");
+        yourBooksPage.openMyBooksPage();
+
+        // Validate Favorites category
+        List<WebElement> allBooks = yourBooksPage.getAllBooks();
+        assertEquals(19, allBooks.size(),
+                "All books count mismatch: " + allBooks.size());
+    }
+
+
+    @AfterAll
     public void tearDown() throws InterruptedException {
         Thread.sleep(5000);
         BrowserManager.closeDriver();

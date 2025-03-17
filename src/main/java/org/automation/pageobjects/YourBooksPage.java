@@ -13,34 +13,38 @@ public class YourBooksPage {
     Logger log = LogManager.getRootLogger();
     BrowserManager manager = new BrowserManager();
     SeleniumActions actions = new SeleniumActions(manager);
+    private final static By WANT_TO_READ_DROPDOWN = By.xpath("(//div[@class=\"wantToReadButton__right\"])[2]");
+    private final static By CURRENTLY_READING_DROPDOWN_OPTION = By.xpath("((//div[contains(@class,\"dropdown__menu--wantToReadMenu\")])[2]//li)[2]");
+    private final static By CURRENTLY_READING_BOOK_COUNT = By.xpath("(//div[@class=\"userShelf\"])[2]//a");
+    private final static By ALL_BOOKS_LIST = By.xpath("//tbody[@id=\"booksBody\"]//tr");
 
-    private final static By YOUR_BOOKS_BUTTON = By.xpath("(//*[@id=\"masttab_books\"])[1]");
-    private final static By YOUR_BOOKS_CATEGORY_DROPDOWN = By.xpath("//*[@id=\"catalogSelectedCollection\"]");
-    private final static By YOUR_BOOKS_LIST = By.xpath("//*[@id='lt_catalog_list']");
-
-    public By getCategoryDropdownOptionLocator(String optionText) {
-        return By.xpath("//div[@id='powerbarCollectionsMenu']//a[contains(text(), '" + optionText + "')]");
+    public void clickOnBookDropdown() {
+        log.info("Clicking the Want to Read dropdown to open it");
+        actions.waitElementToBeClickable(WANT_TO_READ_DROPDOWN, 10);
+        actions.clickElement(WANT_TO_READ_DROPDOWN);
     }
 
-    public void openYourBooksPage() {
-        log.info("Navigating to 'Your Books' page");
-        actions.waitElementToBeClickable(YOUR_BOOKS_BUTTON, 10);
-        actions.clickElement(YOUR_BOOKS_BUTTON);
+    // Select a collection from the dropdown
+    public void addToCollection() {
+        actions.waitElementToBeClickable(CURRENTLY_READING_DROPDOWN_OPTION, 12);
+        actions.clickElement(CURRENTLY_READING_DROPDOWN_OPTION);
+        actions.addCooldown();
     }
 
-    // Select a category from the dropdown and return the list of books
-    public List<WebElement> selectCategory(String category) {
-        log.info("Selecting filter option for books list");
+    public void openMyBooksPage() {
+        log.info("Open My Books page");
+        manager.getDriver().get("https://www.goodreads.com/review/list/188615106?ref=nav_mybooks/");
+    }
 
-        // Locate the dropdown and select the desired category
-        actions.clickElement(YOUR_BOOKS_CATEGORY_DROPDOWN);
-        By favoritesXPath = getCategoryDropdownOptionLocator(category);
-        actions.clickElement(favoritesXPath);
+    public String isBookInCollection() {
+        log.info("Verifying if the book was added to the collection");
+        actions.addCooldown();
+        return actions.getElementText(CURRENTLY_READING_BOOK_COUNT);
+    }
 
-        actions.waitElementToBeClickable(YOUR_BOOKS_LIST, 10);
-
-        // Retrieve and return the list of books
-        log.info("Fetching the list of books for the selected category");
-        return actions.getElements(YOUR_BOOKS_LIST);
+    public List<WebElement> getAllBooks() {
+        log.info("Retrieving the total number of books");
+        actions.addCooldown();
+        return actions.getElements(ALL_BOOKS_LIST);
     }
 }
