@@ -1,9 +1,6 @@
 package org.automation.framework;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.ElementNotInteractableException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Wait;
@@ -20,9 +17,9 @@ public class SeleniumActions {
         this.browserManager = browserManager;
     }
 
-    //clasele de wrapper sau helper se folosesc ca sa nu ai cod repetitiv
+    //Helper classes are used for an overall clean code
     public boolean isElementDisplayed(By locator) {
-        return browserManager.getDriver().findElement(locator).isDisplayed();//findElement returneaza daca elementul exista
+        return browserManager.getDriver().findElement(locator).isDisplayed();
     }
 
     public boolean isElementEnabled(By locator) {
@@ -50,6 +47,14 @@ public class SeleniumActions {
         wait.until(ExpectedConditions.elementToBeClickable(locator));
     }
 
+    public void waitFluentElementClickable(By locator, int timeOut) {
+        Wait<WebDriver> wait = new FluentWait<>(browserManager.getDriver())
+                .withTimeout(Duration.ofSeconds(timeOut))
+                .pollingEvery(Duration.ofMillis(300))
+                .ignoring(ElementNotInteractableException.class);
+        wait.until(ExpectedConditions.elementToBeClickable(locator));
+    }
+
     public void waitFluentElementVisible(By locator, int timeOut) {
         Wait<WebDriver> wait = new FluentWait<>(browserManager.getDriver())
                 .withTimeout(Duration.ofSeconds(timeOut))
@@ -57,4 +62,30 @@ public class SeleniumActions {
                 .ignoring(ElementNotInteractableException.class);
         wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
     }
+
+
+//    public void hoverElement(By locator, WebDriver driver) {
+//        Actions actions = new Actions(driver);
+//        WebElement element = driver.findElement(locator);
+//        actions.moveToElement(element).build().perform();
+//    }
+
+    public WebElement getElement(By locator) {
+        return browserManager.getDriver().findElement(locator);
+    }
+
+    public void pressEnter(By locator) {
+        WebElement element = getElement(locator); // Locate the element
+        element.sendKeys(Keys.ENTER); // Send the Enter key input
+    }
+
+    public void addCooldown() {
+        try {
+            long delay = (long) (Math.random() * 2000 + 3000); // Random delay between 3-5 seconds
+            Thread.sleep(delay); // Pause execution
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt(); // Restore the interrupt status
+        }
+    }
+
 }

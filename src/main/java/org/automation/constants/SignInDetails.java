@@ -1,8 +1,8 @@
 package org.automation.constants;
 
 public enum SignInDetails {
-    LOGIN_USER("usernametest", "test12345"),
-    INVALID_USER("usernametest", "123786");
+    LOGIN_USER("tamasiisabelle@yahoo.com", "adminpassword1"), //username:TestAdminProject
+    INVALID_USER("wrongusernametest", "123786");
 
     private final String username;
     private String password;
